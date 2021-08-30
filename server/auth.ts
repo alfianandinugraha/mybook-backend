@@ -1,8 +1,9 @@
 import express, { Request, Response } from "express"
 import Ajv from "ajv"
 import { v4 } from "uuid"
-import { ApiResponse, User } from "types"
+import { ApiResponse, Token, User } from "types"
 import UserService from "@/services/user"
+import TokenService from "@/services/token"
 
 const server = express()
 const router = express.Router()
@@ -25,7 +26,7 @@ const userRequestSchema = {
 }
 
 router.use(express.json())
-router.post("/register", (req: Request, res: Response<ApiResponse<{} | User>>) => {
+router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) => {
 	const isValid = ajv.validate(userRequestSchema, req.body)
 	if (!isValid) return res.status(400).json({ message: "Invalid body", data: {} })
 
@@ -43,11 +44,7 @@ router.post("/register", (req: Request, res: Response<ApiResponse<{} | User>>) =
 	UserService.register(user)
 	return res.json({
 		message: "Register user successfully",
-		data: {
-			id: userId,
-			name,
-			email,
-		},
+		data: TokenService.getAll({ id: userId }),
 	})
 })
 
