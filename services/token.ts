@@ -4,11 +4,25 @@ import { Token } from "types"
 const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = process.env
 
 function generateAccessToken<T extends {}>(payload: T) {
-	return jwt.sign(payload, ACCESS_TOKEN_SECRET_KEY as string, { expiresIn: "5m" })
+	return jwt.sign(
+		{
+			...payload,
+			type: "access",
+		},
+		ACCESS_TOKEN_SECRET_KEY as string,
+		{ expiresIn: "5m" }
+	)
 }
 
 function generateRefreshToken<T extends {}>(payload: T) {
-	return jwt.sign(payload, REFRESH_TOKEN_SECRET_KEY as string, { expiresIn: "30d" })
+	return jwt.sign(
+		{
+			...payload,
+			type: "refresh",
+		},
+		REFRESH_TOKEN_SECRET_KEY as string,
+		{ expiresIn: "30d" }
+	)
 }
 
 function generateToken<T extends {}>(payload: T): Token {
