@@ -12,6 +12,16 @@ const findEmail = (email: string): User | undefined => {
 	return db.get("users").find({ email }).value()
 }
 
+const login = (email: string, password: string): User | undefined => {
+	const user = findEmail(email)
+	if (!user) return undefined
+
+	const isValidPassword = bcrypt.compareSync(password, user.password)
+	if (!isValidPassword) return undefined
+
+	return user
+}
+
 const register = (user: User) => {
 	const newUser = {
 		...user,
@@ -23,6 +33,7 @@ const register = (user: User) => {
 const UserService = {
 	register,
 	findEmail,
+	login,
 }
 
 export default UserService
