@@ -10,6 +10,14 @@ declare module "types" {
 		users: User[]
 	}
 
+	export interface AccessTokenProps {
+		accessToken: string
+	}
+
+	export interface Token extends AccessTokenProps {
+		refreshToken: string
+	}
+
 	export interface ApiResponse<T> {
 		message: string
 		data: T
