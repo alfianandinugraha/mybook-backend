@@ -48,6 +48,26 @@ router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) 
 	})
 })
 
+router.post("/login", (req, res) => {
+	const isValid = ajv.validate(
+		{
+			...userRequestSchema,
+			required: ["email", "password"],
+		},
+		req.body
+	)
+	if (!isValid) return res.status(400).json({ message: "Invalid body", data: {} })
+
+	const { email, password } = req.body
+	const user: User | undefined = UserService.login(email, password)
+	if (!user)
+		return res.status(404).json({
+			message: "User not found",
+			data: {},
+		})
+	return res.json({ message: "Login successfully", data: TokenService.getAll({ id: user.id }) })
+})
+
 server.use("/api/auth", router)
 
 export default server
