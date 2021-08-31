@@ -17,7 +17,7 @@ router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) 
 
 	const { name, password, email } = req.body
 	const isUserAlreadyExist = UserService.findEmail(email)
-	if (isUserAlreadyExist) return res.status(400).json({ message: "User already exist", data: {} })
+	if (isUserAlreadyExist?.id) return res.status(400).json({ message: "User already exist", data: {} })
 
 	const userId = v4()
 	const user: User = {
