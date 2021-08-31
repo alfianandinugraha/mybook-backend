@@ -1,11 +1,18 @@
 declare module "types" {
 	import { JwtPayload } from "jsonwebtoken"
 
-	export interface User {
+	export interface UserProps {
 		id: string
 		name: string
 		email: string
+	}
+
+	export interface User extends UserProps {
 		password: string
+	}
+
+	export interface UserLocals {
+		user: UserProps
 	}
 
 	export interface UserDB {
