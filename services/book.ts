@@ -15,9 +15,19 @@ const getAll = (userId: string): Book[] => {
 	return db.get("books").filter({ userId }).value()
 }
 
+const get = (id: string): Book | undefined => {
+	return db.get("books").find({ id }).value()
+}
+
+const deleteBook = (id: string) => {
+	return db.get("books").remove({ id }).write()
+}
+
 const BookService = {
 	store,
 	getAll,
+	delete: deleteBook,
+	get,
 }
 
 export default BookService

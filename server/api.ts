@@ -55,6 +55,22 @@ router.get("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>, 
 	})
 })
 
+router.delete("/books/:id", verifyToken, (req: Request, res: Response<ApiResponse<{}>, UserLocals>) => {
+	const id = req.params.id
+	const isBookAvailable = BookService.get(id)
+	if (!isBookAvailable)
+		return res.status(404).json({
+			message: "Book not found",
+			data: {},
+		})
+
+	BookService.delete(id)
+	return res.json({
+		message: "Delete book successfully",
+		data: {},
+	})
+})
+
 router.post("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>, UserLocals>) => {
 	const isValidBody = ajv.validate(requestBookSchema, req.body)
 	if (!isValidBody) return res.status(400).json({ message: "Invalid body", data: {} })
