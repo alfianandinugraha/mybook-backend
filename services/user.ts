@@ -12,6 +12,10 @@ const findEmail = (email: string): User | undefined => {
 	return db.get("users").find({ email }).value()
 }
 
+const findId = (id: string): User | undefined => {
+	return db.get("users").find({ id }).value()
+}
+
 const login = (email: string, password: string): User | undefined => {
 	const user = findEmail(email)
 	if (!user) return undefined
@@ -34,6 +38,7 @@ const UserService = {
 	register,
 	findEmail,
 	login,
+	findId,
 }
 
 export default UserService
