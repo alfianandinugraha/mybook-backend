@@ -111,6 +111,7 @@ dist
 
 # LowDB database
 db/users.json
+db/books.json
 
 # TernJS port file
 .tern-port
