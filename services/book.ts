@@ -11,8 +11,13 @@ const store = (book: Book) => {
 	db.get("books").push(book).write()
 }
 
+const getAll = (userId: string): Book[] => {
+	return db.get("books").filter({ userId }).value()
+}
+
 const BookService = {
 	store,
+	getAll,
 }
 
 export default BookService

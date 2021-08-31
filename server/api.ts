@@ -38,6 +38,23 @@ router.get("/profile", verifyToken, (req: Request, res: Response<ApiResponse<Use
 	})
 })
 
+router.get("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>, UserLocals>) => {
+	const userId = res.locals.user.id
+	const books = BookService.getAll(userId)
+
+	if (!books.length) {
+		return res.status(404).json({
+			message: "Books not found",
+			data: [],
+		})
+	}
+
+	return res.json({
+		message: "Success fetch books",
+		data: books,
+	})
+})
+
 router.post("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>, UserLocals>) => {
 	const isValidBody = ajv.validate(requestBookSchema, req.body)
 	if (!isValidBody) return res.status(400).json({ message: "Invalid body", data: {} })
