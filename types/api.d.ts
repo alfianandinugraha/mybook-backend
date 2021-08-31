@@ -19,6 +19,18 @@ declare module "types" {
 		users: User[]
 	}
 
+	export interface Book {
+		id: string
+		userId: string
+		title: string
+		description: string
+		authors: string[]
+	}
+
+	export interface BookDB {
+		books: Book[]
+	}
+
 	export interface AccessTokenProps {
 		accessToken: string
 	}
