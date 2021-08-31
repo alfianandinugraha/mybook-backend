@@ -1,4 +1,6 @@
 declare module "types" {
+	import { JwtPayload } from "jsonwebtoken"
+
 	export interface User {
 		id: string
 		name: string
@@ -12,6 +14,11 @@ declare module "types" {
 
 	export interface AccessTokenProps {
 		accessToken: string
+	}
+
+	export interface JwtVerifyTokenPayload extends JwtPayload {
+		id: string
+		type: string
 	}
 
 	export interface Token extends AccessTokenProps {
