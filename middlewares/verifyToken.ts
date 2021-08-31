@@ -15,8 +15,7 @@ const verifyToken = (req: Request, res: Response<{}, UserLocals>, next: NextFunc
 		const user = UserService.findId(payload.id)
 		if (!user) return res.status(404).json({})
 
-		const { password, ...newUser } = user
-		res.locals.user = newUser
+		res.locals.user = user
 		next()
 	} catch (err) {
 		console.log(err)

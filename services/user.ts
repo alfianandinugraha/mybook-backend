@@ -2,22 +2,22 @@ import Low from "lowdb"
 import FileSync from "lowdb/adapters/FileSync"
 import { join } from "path"
 import bcrypt from "bcrypt"
-import { User, UserDB } from "types"
+import { User, UserDB, UserProps } from "types"
 
 const file = join(__dirname, "..", "db", "users.json")
 const adapter = new FileSync<UserDB>(file)
 const db = Low(adapter)
 
-const findEmail = (email: string): User | undefined => {
-	return db.get("users").find({ email }).value()
+const findEmail = (email: string): UserProps | undefined => {
+	return db.get("users").find({ email }).omit("password").value()
 }
 
-const findId = (id: string): User | undefined => {
-	return db.get("users").find({ id }).value()
+const findId = (id: string): UserProps | undefined => {
+	return db.get("users").find({ id }).omit("password").value()
 }
 
 const login = (email: string, password: string): User | undefined => {
-	const user = findEmail(email)
+	const user = db.get("users").find({ email }).value()
 	if (!user) return undefined
 
 	const isValidPassword = bcrypt.compareSync(password, user.password)
