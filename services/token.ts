@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken"
-import { Token } from "types"
+import { Token, JwtVerifyTokenPayload } from "types"
 
 const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = process.env
+
+function verifyRefreshToken(refreshToken: string): JwtVerifyTokenPayload {
+	return jwt.verify(refreshToken, REFRESH_TOKEN_SECRET_KEY as string) as JwtVerifyTokenPayload
+}
 
 function generateAccessToken<T extends {}>(payload: T) {
 	return jwt.sign(
@@ -39,6 +43,7 @@ const TokenService = {
 	getAll: generateToken,
 	getAccess: generateAccessToken,
 	getRefresh: generateRefreshToken,
+	verifyRefresh: verifyRefreshToken,
 }
 
 export default TokenService
