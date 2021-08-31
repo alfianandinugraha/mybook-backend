@@ -68,6 +68,27 @@ router.post("/login", (req, res) => {
 	return res.json({ message: "Login successfully", data: TokenService.getAll({ id: user.id }) })
 })
 
+router.post("/access", (req: Request, res: Response) => {
+	const header = req.header("Authorization")
+	if (!header) return res.status(400).json({ message: "Invalid header", data: {} })
+	const token = header.split(" ")[1]
+
+	try {
+		const decode = TokenService.verifyRefresh(token)
+		return res.json({
+			message: "Success generate access token",
+			data: {
+				accessToken: TokenService.getAccess({ id: decode.id }),
+			},
+		})
+	} catch (err) {
+		return res.json({
+			message: "Failed",
+			data: {},
+		})
+	}
+})
+
 server.use("/api/auth", router)
 
 export default server
