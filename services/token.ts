@@ -7,6 +7,10 @@ function verifyRefreshToken(refreshToken: string): JwtVerifyTokenPayload {
 	return jwt.verify(refreshToken, REFRESH_TOKEN_SECRET_KEY as string) as JwtVerifyTokenPayload
 }
 
+function verifyAccessToken(accessToken: string): JwtVerifyTokenPayload {
+	return jwt.verify(accessToken, ACCESS_TOKEN_SECRET_KEY as string) as JwtVerifyTokenPayload
+}
+
 function generateAccessToken<T extends {}>(payload: T) {
 	return jwt.sign(
 		{
@@ -44,6 +48,7 @@ const TokenService = {
 	getAccess: generateAccessToken,
 	getRefresh: generateRefreshToken,
 	verifyRefresh: verifyRefreshToken,
+	verifyAccess: verifyAccessToken,
 }
 
 export default TokenService
