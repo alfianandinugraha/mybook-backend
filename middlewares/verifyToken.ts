@@ -9,7 +9,7 @@ const verifyToken = (req: Request, res: Response<{}, UserLocals>, next: NextFunc
 	const token = header.split(" ")[1]
 
 	try {
-		const payload = TokenService.verifyAccess(token)
+		const payload = TokenService.verifyAccessToken(token)
 		if (payload.type !== "access") return res.status(401).json({})
 
 		const user = UserService.findId(payload.id)

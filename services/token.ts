@@ -44,11 +44,11 @@ function generateToken<T extends {}>(payload: T): Token {
 }
 
 const TokenService = {
-	getAll: generateToken,
-	getAccess: generateAccessToken,
-	getRefresh: generateRefreshToken,
-	verifyRefresh: verifyRefreshToken,
-	verifyAccess: verifyAccessToken,
+	generateToken,
+	generateAccessToken,
+	generateRefreshToken,
+	verifyRefreshToken,
+	verifyAccessToken,
 }
 
 export default TokenService

@@ -44,7 +44,7 @@ router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) 
 	UserService.register(user)
 	return res.json({
 		message: "Register user successfully",
-		data: TokenService.getAll({ id: userId }),
+		data: TokenService.generateToken({ id: userId }),
 	})
 })
 
@@ -65,7 +65,7 @@ router.post("/login", (req, res) => {
 			message: "User not found",
 			data: {},
 		})
-	return res.json({ message: "Login successfully", data: TokenService.getAll({ id: user.id }) })
+	return res.json({ message: "Login successfully", data: TokenService.generateToken({ id: user.id }) })
 })
 
 router.post("/access", (req: Request, res: Response) => {
@@ -74,11 +74,11 @@ router.post("/access", (req: Request, res: Response) => {
 	const token = header.split(" ")[1]
 
 	try {
-		const decode = TokenService.verifyRefresh(token)
+		const decode = TokenService.verifyRefreshToken(token)
 		return res.json({
 			message: "Success generate access token",
 			data: {
-				accessToken: TokenService.getAccess({ id: decode.id }),
+				accessToken: TokenService.generateAccessToken({ id: decode.id }),
 			},
 		})
 	} catch (err) {
