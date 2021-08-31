@@ -19,6 +19,10 @@ const get = (id: string): Book | undefined => {
 	return db.get("books").find({ id }).value()
 }
 
+const update = (id: string, newBook: Book) => {
+	return db.get("books").find({ id }).assign(newBook).write()
+}
+
 const deleteBook = (id: string) => {
 	return db.get("books").remove({ id }).write()
 }
@@ -28,6 +32,7 @@ const BookService = {
 	getAll,
 	delete: deleteBook,
 	get,
+	update,
 }
 
 export default BookService
