@@ -4,26 +4,11 @@ import { v4 } from "uuid"
 import { ApiResponse, Token, User } from "types"
 import UserService from "@/services/user"
 import TokenService from "@/services/token"
+import { userRequestSchema } from "@/schema/user"
 
 const server = express()
 const router = express.Router()
 const ajv = new Ajv()
-
-const userRequestSchema = {
-	type: "object",
-	properties: {
-		name: {
-			type: "string",
-		},
-		email: {
-			type: "string",
-		},
-		password: {
-			type: "string",
-		},
-	},
-	required: ["name", "email", "password"],
-}
 
 router.use(express.json())
 router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) => {

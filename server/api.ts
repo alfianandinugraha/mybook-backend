@@ -4,27 +4,11 @@ import Ajv from "ajv"
 import { ApiResponse, Book, UserLocals, UserProps } from "types"
 import { v4 } from "uuid"
 import BookService from "@/services/book"
+import { requestBookSchema } from "@/schema/book"
 
 const server = express()
 const router = express.Router()
 const ajv = new Ajv()
-
-const requestBookSchema = {
-	type: "object",
-	properties: {
-		title: {
-			type: "string",
-		},
-		authors: {
-			type: "array",
-		},
-		description: {
-			type: "string",
-		},
-	},
-	required: ["title", "authors", "description"],
-	additionalProperties: false,
-}
 
 router.use(express.json())
 router.get("/", (_, res) => {
