@@ -5,6 +5,14 @@ import { ApiResponse, Token, User } from "types"
 import UserService from "@/services/user"
 import TokenService from "@/services/token"
 import { userRequestSchema } from "@/schema/user"
+import {
+	ERR_FAILED_GENERATE_ACCESS_TOKEN,
+	ERR_INVALID_AUTHORIZATION_HEADER,
+	ERR_INVALID_BODY,
+	ERR_USER_ALREADY_EXIST,
+	ERR_USER_NOT_FOUND,
+	SUCCESS_GENERATE_ACCESS_TOKEN,
+} from "@/logs/apiResponse"
 
 const server = express()
 const router = express.Router()
@@ -13,11 +21,11 @@ const ajv = new Ajv()
 router.use(express.json())
 router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) => {
 	const isValid = ajv.validate(userRequestSchema, req.body)
-	if (!isValid) return res.status(400).json({ message: "Invalid body", data: {} })
+	if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
 	const { name, password, email } = req.body
 	const isUserAlreadyExist = UserService.findEmail(email)
-	if (isUserAlreadyExist?.id) return res.status(400).json({ message: "User already exist", data: {} })
+	if (isUserAlreadyExist?.id) return res.status(400).json({ message: ERR_USER_ALREADY_EXIST, data: {} })
 
 	const userId = v4()
 	const user: User = {
@@ -41,13 +49,13 @@ router.post("/login", (req, res) => {
 		},
 		req.body
 	)
-	if (!isValid) return res.status(400).json({ message: "Invalid body", data: {} })
+	if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
 	const { email, password } = req.body
 	const user: User | undefined = UserService.login(email, password)
 	if (!user)
 		return res.status(404).json({
-			message: "User not found",
+			message: ERR_USER_NOT_FOUND,
 			data: {},
 		})
 	return res.json({ message: "Login successfully", data: TokenService.generateToken({ id: user.id }) })
@@ -55,20 +63,20 @@ router.post("/login", (req, res) => {
 
 router.post("/access", (req: Request, res: Response) => {
 	const header = req.header("Authorization")
-	if (!header) return res.status(400).json({ message: "Invalid header", data: {} })
+	if (!header) return res.status(400).json({ message: ERR_INVALID_AUTHORIZATION_HEADER, data: {} })
 	const token = header.split(" ")[1]
 
 	try {
 		const decode = TokenService.verifyRefreshToken(token)
 		return res.json({
-			message: "Success generate access token",
+			message: SUCCESS_GENERATE_ACCESS_TOKEN,
 			data: {
 				accessToken: TokenService.generateAccessToken({ id: decode.id }),
 			},
 		})
 	} catch (err) {
 		return res.json({
-			message: "Failed",
+			message: ERR_FAILED_GENERATE_ACCESS_TOKEN,
 			data: {},
 		})
 	}

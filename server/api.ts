@@ -5,6 +5,15 @@ import { ApiResponse, Book, UserLocals, UserProps } from "types"
 import { v4 } from "uuid"
 import BookService from "@/services/book"
 import { requestBookSchema } from "@/schema/book"
+import {
+	ERR_BOOKS_NOT_FOUND,
+	ERR_FAILED_STORE_BOOK,
+	ERR_INVALID_BODY,
+	SUCCESS_DELETE_BOOK,
+	SUCCESS_GET_PROFILE,
+	SUCCESS_STORE_BOOK,
+	SUCCESS_UPDATE_BOOK,
+} from "@/logs/apiResponse"
 
 const server = express()
 const router = express.Router()
@@ -17,7 +26,7 @@ router.get("/", (_, res) => {
 
 router.get("/profile", verifyToken, (req: Request, res: Response<ApiResponse<UserProps>, UserLocals>) => {
 	return res.json({
-		message: "Success get user profile",
+		message: SUCCESS_GET_PROFILE,
 		data: res.locals.user,
 	})
 })
@@ -44,26 +53,26 @@ router.delete("/books/:id", verifyToken, (req: Request, res: Response<ApiRespons
 	const isBookAvailable = BookService.get(id)
 	if (!isBookAvailable)
 		return res.status(404).json({
-			message: "Book not found",
+			message: ERR_BOOKS_NOT_FOUND,
 			data: {},
 		})
 
 	BookService.delete(id)
 	return res.json({
-		message: "Delete book successfully",
+		message: SUCCESS_DELETE_BOOK,
 		data: {},
 	})
 })
 
 router.put("/books/:id", verifyToken, (req: Request, res: Response<ApiResponse<{}>, UserLocals>) => {
 	const isValidBody = ajv.validate(requestBookSchema, req.body)
-	if (!isValidBody) return res.status(400).json({ message: "Invalid body", data: {} })
+	if (!isValidBody) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
 	const id = req.params.id
 	const isBookAvailable = BookService.get(id)
 	if (!isBookAvailable)
 		return res.status(404).json({
-			message: "Book not found",
+			message: ERR_BOOKS_NOT_FOUND,
 			data: {},
 		})
 
@@ -71,14 +80,14 @@ router.put("/books/:id", verifyToken, (req: Request, res: Response<ApiResponse<{
 	BookService.update(id, { id, userId, ...req.body })
 
 	return res.json({
-		message: "Update book successfully",
+		message: SUCCESS_UPDATE_BOOK,
 		data: {},
 	})
 })
 
 router.post("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>, UserLocals>) => {
 	const isValidBody = ajv.validate(requestBookSchema, req.body)
-	if (!isValidBody) return res.status(400).json({ message: "Invalid body", data: {} })
+	if (!isValidBody) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
 	const bookId = v4()
 	const { title, description, authors } = req.body
@@ -93,13 +102,13 @@ router.post("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>,
 	try {
 		BookService.store(book)
 		return res.json({
-			message: "Success store book",
+			message: SUCCESS_STORE_BOOK,
 			data: book,
 		})
 	} catch (err) {
 		console.log(err)
 		return res.status(400).json({
-			message: "Failed to store book",
+			message: ERR_FAILED_STORE_BOOK,
 			data: {},
 		})
 	}
