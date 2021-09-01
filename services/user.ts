@@ -10,8 +10,9 @@ const file = join(__dirname, "..", "db", "users.json")
 const adapter = new FileSync<UserDB>(file)
 const db = Low(adapter)
 
-const findEmail = (email: string): UserProps | undefined => {
-	return db.get("users").find({ email }).omit("password").value()
+const findEmail = (email: string): UserProps | null => {
+	const result = db.get("users").find({ email }).omit("password").value()
+	return result.id ? result : null
 }
 
 const findId = (id: string): UserProps | undefined => {
@@ -28,7 +29,10 @@ const login = (email: string, password: string): User | undefined => {
 	return user
 }
 
-const register = (user: UserRegisterRequest): User => {
+const register = (user: UserRegisterRequest): User | null => {
+	const hasUser = findEmail(user.email)
+	if (hasUser) return null
+
 	const newUser: User = {
 		...user,
 		id: v4(),

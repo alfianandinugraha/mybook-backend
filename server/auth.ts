@@ -26,11 +26,8 @@ router.post(
 		const isValid = ajv.validate(userRequestSchema, req.body)
 		if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
-		const { email } = req.body
-		const isUserAlreadyExist = UserService.findEmail(email)
-		if (isUserAlreadyExist?.id) return res.status(400).json({ message: ERR_USER_ALREADY_EXIST, data: {} })
-
 		const userResult = UserService.register(req.body)
+		if (!userResult) return res.status(400).json({ message: ERR_USER_ALREADY_EXIST, data: {} })
 
 		return res.json({
 			message: "Register user successfully",
