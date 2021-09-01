@@ -19,12 +19,12 @@ const findId = (id: string): UserProps | undefined => {
 	return db.get("users").find({ id }).omit("password").value()
 }
 
-const login = (email: string, password: string): User | undefined => {
+const login = (email: string, password: string): User | null => {
 	const user = db.get("users").find({ email }).value()
-	if (!user) return undefined
+	if (!user) return null
 
 	const isValidPassword = bcrypt.compareSync(password, user.password)
-	if (!isValidPassword) return undefined
+	if (!isValidPassword) return null
 
 	return user
 }

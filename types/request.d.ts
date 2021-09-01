@@ -4,4 +4,9 @@ declare module "ApiRequest" {
 		email: string
 		password: string
 	}
+
+	export interface UserLoginRequest {
+		email: string
+		password: string
+	}
 }

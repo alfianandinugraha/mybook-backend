@@ -13,7 +13,7 @@ import {
 	ERR_USER_NOT_FOUND,
 	SUCCESS_GENERATE_ACCESS_TOKEN,
 } from "@/logs/apiResponse"
-import { UserRegisterRequest } from "ApiRequest"
+import { UserLoginRequest, UserRegisterRequest } from "ApiRequest"
 
 const server = express()
 const router = express.Router()
@@ -36,7 +36,7 @@ router.post(
 	}
 )
 
-router.post("/login", (req, res) => {
+router.post("/login", (req: Request<null, null, UserLoginRequest>, res: Response<ApiResponse<{}>>) => {
 	const isValid = ajv.validate(
 		{
 			...userRequestSchema,
@@ -47,7 +47,7 @@ router.post("/login", (req, res) => {
 	if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
 	const { email, password } = req.body
-	const user: User | undefined = UserService.login(email, password)
+	const user = UserService.login(email, password)
 	if (!user)
 		return res.status(404).json({
 			message: ERR_USER_NOT_FOUND,
