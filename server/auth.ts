@@ -1,10 +1,9 @@
 import express, { Request, Response } from "express"
 import Ajv from "ajv"
-import { v4 } from "uuid"
 import { ApiResponse, Token, User } from "types"
 import UserService from "@/services/user"
 import TokenService from "@/services/token"
-import { userRequestRegisterSchema } from "@/schema/user"
+import { userRequestLoginSchema, userRequestRegisterSchema } from "@/schema/user"
 import {
 	ERR_FAILED_GENERATE_ACCESS_TOKEN,
 	ERR_INVALID_AUTHORIZATION_HEADER,
@@ -37,13 +36,7 @@ router.post(
 )
 
 router.post("/login", (req: Request<null, null, UserLoginRequest>, res: Response<ApiResponse<{}>>) => {
-	const isValid = ajv.validate(
-		{
-			...userRequestRegisterSchema,
-			required: ["email", "password"],
-		},
-		req.body
-	)
+	const isValid = ajv.validate(userRequestLoginSchema, req.body)
 	if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
 	const { email, password } = req.body

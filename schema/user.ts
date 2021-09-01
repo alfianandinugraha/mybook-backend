@@ -14,4 +14,9 @@ const userRequestRegisterSchema = {
 	required: ["name", "email", "password"],
 }
 
-export { userRequestRegisterSchema }
+const userRequestLoginSchema = {
+	...userRequestRegisterSchema,
+	required: ["email", "password"],
+}
+
+export { userRequestRegisterSchema, userRequestLoginSchema }
