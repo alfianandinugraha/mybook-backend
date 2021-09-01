@@ -1,4 +1,4 @@
-const userRequestSchema = {
+const userRequestRegisterSchema = {
 	type: "object",
 	properties: {
 		name: {
@@ -14,4 +14,4 @@ const userRequestSchema = {
 	required: ["name", "email", "password"],
 }
 
-export { userRequestSchema }
+export { userRequestRegisterSchema }
