@@ -10,6 +10,7 @@ import {
 	ERR_FAILED_STORE_BOOK,
 	ERR_INVALID_BODY,
 	SUCCESS_DELETE_BOOK,
+	SUCCESS_GET_BOOKS,
 	SUCCESS_GET_PROFILE,
 	SUCCESS_STORE_BOOK,
 	SUCCESS_UPDATE_BOOK,
@@ -37,13 +38,13 @@ router.get("/books", verifyToken, (req: Request, res: Response<ApiResponse<{}>, 
 
 	if (!books.length) {
 		return res.status(404).json({
-			message: "Books not found",
+			message: ERR_BOOKS_NOT_FOUND,
 			data: [],
 		})
 	}
 
 	return res.json({
-		message: "Success fetch books",
+		message: SUCCESS_GET_BOOKS,
 		data: books,
 	})
 })
