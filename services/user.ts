@@ -15,8 +15,9 @@ const findEmail = (email: string): UserProps | null => {
 	return result.id ? result : null
 }
 
-const findId = (id: string): UserProps | undefined => {
-	return db.get("users").find({ id }).omit("password").value()
+const findId = (id: string): UserProps | null => {
+	const result = db.get("users").find({ id }).omit("password").value()
+	return result.id ? result : null
 }
 
 const login = (email: string, password: string): User | null => {
