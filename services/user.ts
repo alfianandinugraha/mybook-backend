@@ -3,6 +3,8 @@ import FileSync from "lowdb/adapters/FileSync"
 import { join } from "path"
 import bcrypt from "bcrypt"
 import { User, UserDB, UserProps } from "types"
+import { UserRegisterRequest } from "ApiRequest"
+import { v4 } from "uuid"
 
 const file = join(__dirname, "..", "db", "users.json")
 const adapter = new FileSync<UserDB>(file)
@@ -26,12 +28,14 @@ const login = (email: string, password: string): User | undefined => {
 	return user
 }
 
-const register = (user: User) => {
-	const newUser = {
+const register = (user: UserRegisterRequest): User => {
+	const newUser: User = {
 		...user,
+		id: v4(),
 		password: bcrypt.hashSync(user.password, bcrypt.genSaltSync(5)),
 	}
-	return db.get("users").push(newUser).write()
+	const result = db.get("users").push(newUser).write()
+	return result[0]
 }
 
 const UserService = {

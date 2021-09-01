@@ -13,33 +13,31 @@ import {
 	ERR_USER_NOT_FOUND,
 	SUCCESS_GENERATE_ACCESS_TOKEN,
 } from "@/logs/apiResponse"
+import { UserRegisterRequest } from "ApiRequest"
 
 const server = express()
 const router = express.Router()
 const ajv = new Ajv()
 
 router.use(express.json())
-router.post("/register", (req: Request, res: Response<ApiResponse<{} | Token>>) => {
-	const isValid = ajv.validate(userRequestSchema, req.body)
-	if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
+router.post(
+	"/register",
+	(req: Request<null, null, UserRegisterRequest>, res: Response<ApiResponse<{} | Token>>) => {
+		const isValid = ajv.validate(userRequestSchema, req.body)
+		if (!isValid) return res.status(400).json({ message: ERR_INVALID_BODY, data: {} })
 
-	const { name, password, email } = req.body
-	const isUserAlreadyExist = UserService.findEmail(email)
-	if (isUserAlreadyExist?.id) return res.status(400).json({ message: ERR_USER_ALREADY_EXIST, data: {} })
+		const { email } = req.body
+		const isUserAlreadyExist = UserService.findEmail(email)
+		if (isUserAlreadyExist?.id) return res.status(400).json({ message: ERR_USER_ALREADY_EXIST, data: {} })
 
-	const userId = v4()
-	const user: User = {
-		id: userId,
-		name,
-		password,
-		email,
+		const userResult = UserService.register(req.body)
+
+		return res.json({
+			message: "Register user successfully",
+			data: TokenService.generateToken({ id: userResult.id }),
+		})
 	}
-	UserService.register(user)
-	return res.json({
-		message: "Register user successfully",
-		data: TokenService.generateToken({ id: userId }),
-	})
-})
+)
 
 router.post("/login", (req, res) => {
 	const isValid = ajv.validate(
