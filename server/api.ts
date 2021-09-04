@@ -78,11 +78,12 @@ router.put("/books/:id", verifyToken, (req: Request, res: Response<ApiResponse<{
 		})
 
 	const userId = res.locals.user.id
-	BookService.update(id, { id, userId, ...req.body })
+	const newBook = { id, userId, ...req.body }
+	BookService.update(id, newBook)
 
 	return res.json({
 		message: SUCCESS_UPDATE_BOOK,
-		data: {},
+		data: newBook,
 	})
 })
 
