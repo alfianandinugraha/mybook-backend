@@ -58,7 +58,7 @@ router.post("/access", (req: Request, res: Response) => {
 		const decode = TokenService.verifyRefreshToken(token)
 
 		if (decode.type != "refresh")
-			return res.json({
+			return res.status(401).json({
 				message: ERR_INVALID_AUTHORIZATION_HEADER,
 				data: {},
 			})
