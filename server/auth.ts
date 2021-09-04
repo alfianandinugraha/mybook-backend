@@ -13,11 +13,13 @@ import {
 	SUCCESS_GENERATE_ACCESS_TOKEN,
 } from "@/logs/apiResponse"
 import { UserLoginRequest, UserRegisterRequest } from "ApiRequest"
+import cors from 'cors'
 
 const server = express()
 const router = express.Router()
 const ajv = new Ajv()
 
+server.use(cors())
 router.use(express.json())
 router.post(
 	"/register",

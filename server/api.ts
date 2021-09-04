@@ -15,11 +15,13 @@ import {
 	SUCCESS_STORE_BOOK,
 	SUCCESS_UPDATE_BOOK,
 } from "@/logs/apiResponse"
+import cors from 'cors'
 
 const server = express()
 const router = express.Router()
 const ajv = new Ajv()
 
+server.use(cors())
 router.use(express.json())
 router.get("/", (_, res) => {
 	return res.json("Hello world !")
