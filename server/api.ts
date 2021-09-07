@@ -14,7 +14,7 @@ import {
 	SUCCESS_GET_PROFILE,
 	SUCCESS_STORE_BOOK,
 	SUCCESS_UPDATE_BOOK,
-} from "@/logs/apiResponse"
+} from "@/messages/apiResponse"
 import cors from 'cors'
 
 const server = express()

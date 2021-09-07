@@ -6,7 +6,7 @@ import {
 	ERR_INVALID_ACCESS_TOKEN,
 	ERR_INVALID_AUTHORIZATION_HEADER,
 	ERR_USER_NOT_FOUND,
-} from "@/logs/apiResponse"
+} from "@/messages/apiResponse"
 
 const verifyToken = (req: Request, res: Response<ApiResponse<{}>, UserLocals>, next: NextFunction) => {
 	const header = req.header("Authorization")

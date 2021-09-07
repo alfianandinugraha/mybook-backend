@@ -11,7 +11,7 @@ import {
 	ERR_USER_ALREADY_EXIST,
 	ERR_USER_NOT_FOUND,
 	SUCCESS_GENERATE_ACCESS_TOKEN,
-} from "@/logs/apiResponse"
+} from "@/messages/apiResponse"
 import { UserLoginRequest, UserRegisterRequest } from "ApiRequest"
 import cors from 'cors'
 
